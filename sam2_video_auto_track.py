@@ -54,6 +54,8 @@ def main():
     parser.add_argument('--output-dir', default=None, help='Output dir for visualizations (optional)')
     parser.add_argument('--batch-size', type=int, default=10, help='How many frames per batch')
     parser.add_argument('--no-show', action='store_true', help='Do not display plot windows')
+    parser.add_argument('--points-per-side', type=int, default=64, help='Points per side for mask generation')
+    parser.add_argument('--points-per-batch', type=int, default=128, help='Points per batch for mask generation')
     args = parser.parse_args()
 
     # Device setup
@@ -85,8 +87,8 @@ def main():
     sam2 = build_sam2(args.config, args.checkpoint, device=device, apply_postprocessing=False)
     mask_generator = SAM2AutomaticMaskGenerator(
         model=sam2,
-        points_per_side=64,
-        points_per_batch=128,
+        points_per_side=args.points_per_side,
+        points_per_batch=args.points_per_batch,
         pred_iou_thresh=0.9,
         stability_score_thresh=0.94,
         stability_score_offset=0.7,
